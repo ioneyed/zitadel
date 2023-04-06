@@ -215,6 +215,9 @@ func (l *Login) runPreCreationActions(
 
 	metadataList := object.MetadataListFromDomain(metadata)
 	apiFields := actions.WithAPIFields(
+		actions.SetFields("setId", func(id string) {
+			user.AggregateID = id
+		}),
 		actions.SetFields("setFirstName", func(firstName string) {
 			user.FirstName = firstName
 		}),

@@ -30,7 +30,7 @@ func actionFailedMessage(err error) string {
 }
 
 func Run(ctx context.Context, ctxParam contextFields, apiParam apiFields, script, name string, opts ...Option) (err error) {
-	config := newRunConfig(ctx, append(opts, withLogger(ctx))...)
+	config := newRunConfig(ctx, append(opts, withLogger(ctx), WithUuid(ctx))...)
 	if config.functionTimeout == 0 {
 		return z_errs.ThrowInternal(nil, "ACTIO-uCpCx", "Errrors.Internal")
 	}
@@ -61,7 +61,7 @@ func Run(ctx context.Context, ctxParam contextFields, apiParam apiFields, script
 	var fn jsAction
 	jsFn := config.vm.Get(name)
 	if jsFn == nil {
-		return errors.New("function not found")
+		return errors.New(fmt.Sprintf("(%v) function not found", name))
 	}
 	if err := config.vm.ExportTo(jsFn, &fn); err != nil {
 		return err
